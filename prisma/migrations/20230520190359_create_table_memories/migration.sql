@@ -25,8 +25,7 @@ CREATE TABLE "new_users" (
     "githubId" INTEGER NOT NULL,
     "name" TEXT NOT NULL,
     "login" TEXT NOT NULL,
-    "avatarUrl" TEXT NOT NULL,
-    "password_hash" TEXT NOT NULL
+    "avatarUrl" TEXT NOT NULL
 );
 INSERT INTO "new_users" ("id", "name", "password_hash") SELECT "id", "name", "password_hash" FROM "users";
 DROP TABLE "users";
