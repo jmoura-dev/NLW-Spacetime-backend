@@ -7,7 +7,7 @@ export async function memoriesRoutes(app: FastifyInstance) {
     await request.jwtVerify()
   })
 
-  app.post('/memories', async (request, _) => {
+  app.post('/memories', async (request, reply) => {
     const bodySchema = z.object({
       content: z.string(),
       coverUrl: z.string(),
@@ -28,7 +28,7 @@ export async function memoriesRoutes(app: FastifyInstance) {
     return memory
   })
 
-  app.get('/memories', async (request, _) => {
+  app.get('/memories', async (request, reply) => {
     const memories = await prisma.memory.findMany({
       where: {
         user_id: request.user.sub,
@@ -72,13 +72,14 @@ export async function memoriesRoutes(app: FastifyInstance) {
       id: z.string(),
     })
 
+    const { id } = paramsSchema.parse(request.params)
+
     const bodySchema = z.object({
       content: z.string(),
       coverUrl: z.string(),
       isPublic: z.coerce.boolean().default(false),
     })
 
-    const { id } = paramsSchema.parse(request.params)
     const { content, isPublic, coverUrl } = bodySchema.parse(request.body)
 
     let memory = await prisma.memory.findUniqueOrThrow({
